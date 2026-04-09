@@ -16,14 +16,18 @@ module tb_multiplier;
     wire signed [63:0] wallace_product;
     wire signed [63:0] array_product;
 
-    // Booth encoder outputs for visualization
-    wire [63:0] pp [15:0];
+    // Booth encoder outputs for visualization - individual wires
+    wire [63:0] pp0, pp1, pp2, pp3, pp4, pp5, pp6, pp7;
+    wire [63:0] pp8, pp9, pp10, pp11, pp12, pp13, pp14, pp15;
 
     // ── Instantiations ────────────────────────────────────────────────────
     booth_encoder_radix4 BOOTH (
-        .A  (A),
-        .B  (B),
-        .pp (pp)
+        .A   (A),
+        .B   (B),
+        .pp0 (pp0),  .pp1 (pp1),  .pp2 (pp2),  .pp3 (pp3),
+        .pp4 (pp4),  .pp5 (pp5),  .pp6 (pp6),  .pp7 (pp7),
+        .pp8 (pp8),  .pp9 (pp9),  .pp10(pp10), .pp11(pp11),
+        .pp12(pp12), .pp13(pp13), .pp14(pp14), .pp15(pp15)
     );
 
     wallace_multiplier_top WALLACE (
@@ -127,10 +131,10 @@ module tb_multiplier;
             $display("WALLACE_DELAY: %0d", wallace_delay);
             $display("ARRAY_DELAY: %0d", array_delay);
             $display("PP: %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d %0d",
-                     $signed(pp[0]),  $signed(pp[1]),  $signed(pp[2]),  $signed(pp[3]),
-                     $signed(pp[4]),  $signed(pp[5]),  $signed(pp[6]),  $signed(pp[7]),
-                     $signed(pp[8]),  $signed(pp[9]),  $signed(pp[10]), $signed(pp[11]),
-                     $signed(pp[12]), $signed(pp[13]), $signed(pp[14]), $signed(pp[15]));
+                     $signed(pp0),  $signed(pp1),  $signed(pp2),  $signed(pp3),
+                     $signed(pp4),  $signed(pp5),  $signed(pp6),  $signed(pp7),
+                     $signed(pp8),  $signed(pp9),  $signed(pp10), $signed(pp11),
+                     $signed(pp12), $signed(pp13), $signed(pp14), $signed(pp15));
             $finish;
         end
 

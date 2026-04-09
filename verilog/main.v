@@ -1,10 +1,3 @@
-`default_nettype none
-
-// Top-level Wallace Tree Multiplier
-// 32-bit signed inputs → 64-bit signed product
-//
-// Pipeline: Booth Encoder → Wallace Tree → Carry Lookahead Adder
-
 module wallace_multiplier_top(
     input  wire [31:0] A,
     input  wire [31:0] B,
@@ -12,7 +5,10 @@ module wallace_multiplier_top(
 );
 
     // Booth encoder partial products (16 × 64-bit)
-    wire [63:0] pp [15:0];
+    wire [63:0] pp0, pp1, pp2, pp3,
+                pp4, pp5, pp6, pp7,
+                pp8, pp9, pp10, pp11,
+                pp12, pp13, pp14, pp15;
 
     // Wallace tree outputs (two rows for final adder)
     wire [63:0] wsum;
@@ -23,38 +19,53 @@ module wallace_multiplier_top(
     wire        final_cout;   // not used in product; kept for completeness
 
 
-    // ── Booth Encoder ─────────────────────────────────────────────────────
+    // -- Booth Encoder -----------------------------------------------------
     booth_encoder_radix4 booth_unit (
         .A  (A),
         .B  (B),
-        .pp (pp)
+        .pp0(pp0),
+        .pp1(pp1),
+        .pp2(pp2),
+        .pp3(pp3),
+        .pp4(pp4),
+        .pp5(pp5),
+        .pp6(pp6),
+        .pp7(pp7),
+        .pp8(pp8),
+        .pp9(pp9),
+        .pp10(pp10),
+        .pp11(pp11),
+        .pp12(pp12),
+        .pp13(pp13),
+        .pp14(pp14),
+        .pp15(pp15)
     );
 
 
-    // ── Wallace Tree ──────────────────────────────────────────────────────
+    // -- Wallace Tree ------------------------------------------------------
     wallace_tree_32bit wallace_unit (
-        .pp0   (pp[0]),
-        .pp1   (pp[1]),
-        .pp2   (pp[2]),
-        .pp3   (pp[3]),
-        .pp4   (pp[4]),
-        .pp5   (pp[5]),
-        .pp6   (pp[6]),
-        .pp7   (pp[7]),
-        .pp8   (pp[8]),
-        .pp9   (pp[9]),
-        .pp10  (pp[10]),
-        .pp11  (pp[11]),
-        .pp12  (pp[12]),
-        .pp13  (pp[13]),
-        .pp14  (pp[14]),
-        .pp15  (pp[15]),
+        .pp0   (pp0),
+        .pp1   (pp1),
+        .pp2   (pp2),
+        .pp3   (pp3),
+        .pp4   (pp4),
+        .pp5   (pp5),
+        .pp6   (pp6),
+        .pp7   (pp7),
+        .pp8   (pp8),
+        .pp9   (pp9),
+        .pp10  (pp10),
+        .pp11  (pp11),
+        .pp12  (pp12),
+        .pp13  (pp13),
+        .pp14  (pp14),
+        .pp15  (pp15),
         .sum   (wsum),
         .carry (wcarry)
     );
 
 
-    // ── Carry Lookahead Adder ─────────────────────────────────────────────
+    // -- Carry Lookahead Adder ---------------------------------------------
     carry_lookahead_adder cla (
         .A   (wsum),
         .B   (wcarry),
@@ -64,10 +75,8 @@ module wallace_multiplier_top(
     );
 
 
-    // ── Final Product ─────────────────────────────────────────────────────
+    // -- Final Product -----------------------------------------------------
     // A 32×32 signed product fits in 64 bits
     assign product = final_sum;
 
 endmodule
-
-`default_nettype wire
